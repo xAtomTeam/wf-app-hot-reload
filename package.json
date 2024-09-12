@@ -1,0 +1,10 @@
+{
+  "name": "@xatom/wf-app-hot-reload",
+  "version": "1.0.2",
+  "description": "Enable hot reloading on your webflow app. vite plugin",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [],
+  "author": "xAtom",
+  "license": "ISC"
+}
