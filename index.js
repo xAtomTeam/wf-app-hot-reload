@@ -2,26 +2,43 @@ import path from "path";
 import fs from "fs";
 
 /**
- * vite plugin
+ * Vite plugin for hot-reloading Webflow templates
+ *
+ * This plugin enables real-time development by:
+ * 1. Loading Webflow configuration from webflow.json
+ * 2. Fetching Webflow template content from webflow-ext.com
+ * 3. Injecting local development content into the Webflow template
+ * 4. Supporting feature flags and API version configuration
  */
 
 const wfHotReload = () => {
+  // Cache for storing fetched Webflow HTML template
   let webflowHTML = "";
-  //load webflow config content
+
+  // Read and parse the webflow.json configuration file
+  // This file contains project name, API version, and feature flags
   const configContent = fs
     .readFileSync(path.join("./webflow.json"))
     .toString();
 
   return {
     name: "webflow-hot-reload-server",
+
+    /**
+     * Transform the development HTML before serving
+     * @param {string} html - The original HTML content from the development build
+     * @returns {Promise<string>} - The transformed HTML with Webflow template integration
+     */
     transformIndexHtml: async (html) => {
       const webflowConfig = JSON.parse(configContent);
       const _name = webflowConfig.name;
-      //default template set to v1
+
+      // Template path configuration based on API version
+      // v1 is default, v2 has a different template endpoint
       let template = "/template";
       let flagQuery = "";
 
-      //set template v2 if api version is 2
+      // Configure template endpoint for API v2 if specified
       if (
         webflowConfig.apiVersion &&
         webflowConfig.apiVersion === "2"
@@ -29,7 +46,8 @@ const wfHotReload = () => {
         template = "/template/v2";
       }
 
-      //add feature flags query parameters if exists in config file
+      // Process feature flags from config and build query parameters
+      // Supports both enabling (ff_on) and disabling (ff_off) features
       if (webflowConfig.featureFlags) {
         Object.keys(webflowConfig.featureFlags).forEach(
           (key) => {
@@ -42,8 +60,8 @@ const wfHotReload = () => {
         );
       }
 
+      // Fetch Webflow template if not already cached
       if (webflowHTML.length === 0) {
-        //fetch webflow template content
         webflowHTML = await (
           await fetch(
             `https://webflow-ext.com${template}?name=${_name}${flagQuery}`
@@ -51,15 +69,22 @@ const wfHotReload = () => {
         ).text();
       }
 
-      //replace {{ui}} in webflow template with current html content
+      // Inject the development HTML content into the Webflow template
+      // Replaces the {{ui}} placeholder with current development content
       const _finalHTML = webflowHTML.replace(
         `{{ui}}`,
         html
       );
       return _finalHTML;
     },
+
+    /**
+     * Configure development server middleware
+     * @param {import('vite').ViteDevServer} server - Vite dev server instance
+     */
     configureServer(server) {
-      //add middleware to handle webflow.json request
+      // Add middleware to serve webflow.json configuration
+      // This endpoint is used by the Webflow extension to read project config
       server.middlewares.use(async (req, res, next) => {
         if (req.url === "/__webflow") {
           res.statusCode = 200;
@@ -78,4 +103,5 @@ const wfHotReload = () => {
     },
   };
 };
+
 export default wfHotReload;

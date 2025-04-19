@@ -1,38 +1,58 @@
-## Enabling Hot Reloading in Your Webflow Application
+# @xatom/wf-app-hot-reload
 
-### Installation
+Seamless hot reloading for Webflow applications during development.
 
-To add the hot reloading feature, use one of the following commands:
+## Features
 
-With Yarn:
+- Instant updates: Reflect code changes in your Webflow App without manual reloads.
+- Vite plugin: Easy integration with Vite-based workflows.
+
+## Installation
+
+Install as a dev dependency in your project:
 
 ```bash
+# Yarn
 yarn add -D @xatom/wf-app-hot-reload
-```
 
-With PNPM:
-
-```bash
+# PNPM
 pnpm install -D @xatom/wf-app-hot-reload
 ```
 
-### Usage
+## Usage
 
-> [!WARNING]  
-> This plugin is intended for **development use only**. Be sure to thoroughly test your final App using the Webflow CLI before deploying it to production.
-> **Do not run this plugin when bundling your App.**
+> **Warning:** This plugin is for **development only**. Do **not** include it in production bundles.
+>
+> Before deploying, always build and test your App using the Webflow CLI without this plugin.
 
-After installation, update your `vite.config.js` to include the `@xatom/wf-app-hot-reload` plugin.
+1. Update your `vite.config.js`:
 
-```javascript
-import wfHotReload from "@xatom/wf-app-hot-reload";
+   ```javascript
+   import { defineConfig } from "vite";
+   import wfHotReload from "@xatom/wf-app-hot-reload";
 
-export default defineConfig({
-  plugins: [
-    ...,
-    wfHotReload(),
-  ],
-});
-```
+   export default defineConfig({
+     plugins: [
+       wfHotReload(),
+       // other plugins...
+     ],
+   });
+   ```
 
+2. Run your development server:
 
+   ```bash
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+Any edits to your source files will now trigger hot reloads in your Webflow App.
+
+## Configuration
+
+No additional setup is required out of the box. The plugin works with your existing Vite configuration.
+
+## License
+
+MIT
