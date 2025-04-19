@@ -49,6 +49,10 @@ pnpm install -D @xatom/wf-app-hot-reload
 
 Any edits to your source files will now trigger hot reloads in your Webflow App.
 
+## Example Project
+
+- [Webflow App React + Vite Example](https://github.com/xAtomTeam/Webflow-App-React-TypeScript-Vite-Example)
+
 ## Configuration
 
 No additional setup is required out of the box. The plugin works with your existing Vite configuration.
