@@ -23,6 +23,7 @@ const wfHotReload = () => {
 
   return {
     name: "webflow-hot-reload-server",
+    apply: "serve", // Only runs during development
 
     /**
      * Transform the development HTML before serving

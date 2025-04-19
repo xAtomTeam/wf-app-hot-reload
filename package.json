@@ -1,8 +1,9 @@
 {
   "name": "@xatom/wf-app-hot-reload",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A Vite plugin that adds seamless hot‑reloading to your Webflow application during development.",
   "main": "index.js",
+  "types": "types.d.ts",
   "type": "module",
   "keywords": [
     "webflow",
